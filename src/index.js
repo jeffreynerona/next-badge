@@ -26,6 +26,12 @@ var limiter = new RateLimit({
 //  apply to all requests 
 app.use(limiter);
 
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 // parese application/json
 app.use(bodyParser.json({
 	limit: config.bodyLimit
