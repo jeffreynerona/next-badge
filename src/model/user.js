@@ -7,7 +7,8 @@ let User = new Schema({
 	email: String,
 	password: String,
 	type: String,
-	coins: Number
+	coins: Number,
+	fullname: String
 },{timestamps: true});
 
 // generating a hash

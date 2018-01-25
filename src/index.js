@@ -61,9 +61,10 @@ passport.use('local-login', new LocalStrategy({
 
 passport.use('local-register', new LocalStrategy({
 	usernameField: 'email',
-	passwordField: 'password'
+	passwordField: 'password',
+	passReqToCallback: true
 },
-	function(email, password, next) {
+	function(req, email, password, next) {
 		console.log(email +" "+ password)
 		process.nextTick(function() {
 
@@ -80,6 +81,7 @@ passport.use('local-register', new LocalStrategy({
 
 	      var newUser = new User();
 	      newUser.email    = email;
+	      newUser.fullname = req.body.fullname;
 	      newUser.password = newUser.generateHash(password);
 	      newUser.type = "user";
 	      newUser.coins = 0;
