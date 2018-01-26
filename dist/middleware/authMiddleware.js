@@ -17,17 +17,20 @@ var authenticate = (0, _expressJwt2.default)({ secret: SECRET });
 
 var generateAccessToken = function generateAccessToken(req, res, next) {
 	console.log(req.user.id);
+	req.user = req.user;
 	req.token = req.token || {};
 	req.token = _jsonwebtoken2.default.sign({
 		id: req.user.id
-	}, SECRET, {});
+	}, SECRET, {
+		expiresIn: 604800
+	});
 	next();
 };
 
 var respond = function respond(req, res) {
 	res.status(200).json({
 		success: true,
-		user: req.user.username,
+		user: req.user,
 		token: req.token
 	});
 };

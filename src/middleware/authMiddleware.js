@@ -8,11 +8,15 @@ let authenticate = expressJwt({ secret: SECRET });
 
 let generateAccessToken = (req, res, next) => {
 	console.log(req.user.id)
+	req.user.id = req.user.id;
+	req.user.coins = req.user.coins;
+	req.user.type = req.user.type;
+	req.user.fullname = req.user.fullname;
 	req.token = req.token || {};
 	req.token = jwt.sign({
 		id: req.user.id,
 	}, SECRET, {
-
+		expiresIn: 604800
 	});
 	next();
 }
@@ -20,7 +24,12 @@ let generateAccessToken = (req, res, next) => {
 let respond = (req, res) => {
 	res.status(200).json({
 		success: true,
-		user: req.user.username,
+		user: {
+			id: req.user.id,
+			coins: req.user.coins,
+			type: req.user.type,
+			fullname: req.user.fullname
+		},
 		token: req.token
 	});
 }

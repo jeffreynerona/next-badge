@@ -54,6 +54,13 @@ var limiter = new RateLimit({
 //  apply to all requests 
 app.use(limiter);
 
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+  next();
+});
+
 // parese application/json
 app.use(_bodyParser2.default.json({
   limit: _config2.default.bodyLimit
@@ -85,8 +92,9 @@ _passport2.default.use('local-login', new LocalStrategy({
 
 _passport2.default.use('local-register', new LocalStrategy({
   usernameField: 'email',
-  passwordField: 'password'
-}, function (email, password, next) {
+  passwordField: 'password',
+  passReqToCallback: true
+}, function (req, email, password, next) {
   console.log(email + " " + password);
   process.nextTick(function () {
 
@@ -103,6 +111,7 @@ _passport2.default.use('local-register', new LocalStrategy({
 
       var newUser = new User();
       newUser.email = email;
+      newUser.fullname = req.body.fullname;
       newUser.password = newUser.generateHash(password);
       newUser.type = "user";
       newUser.coins = 0;

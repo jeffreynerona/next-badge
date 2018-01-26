@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = {
 	"port": 3005,
-	"mongoUrl": "mongodb://localhost:27017/luciron-api",
+	"mongoUrl": "mongodb://localhost:27017/luciron-test2",
 	"bodyLimit": "500kb"
 };
 //# sourceMappingURL=index.js.map

@@ -32,6 +32,9 @@ let eventSchema = new Schema({
 	image: {
 		type: String
 	},
+	qr: {
+		type: String
+	},
 	owner: {
 		type: Schema.Types.ObjectId,
 		ref: 'User',

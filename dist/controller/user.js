@@ -41,9 +41,8 @@ exports.default = function (_ref) {
 		session: false,
 		scope: []
 	}), function (err, req, res, next) {
-		console.log('it goes here');
 		if (err) {
-			console.log(err + "haha");
+			console.log(err);
 			return res.status(200).json({
 				success: false,
 				message: err

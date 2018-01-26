@@ -73,7 +73,7 @@ export default({ config, db }) => {
 			} else if (!event){
 					return res.status(404).json({
 						success: false,
-						error: 'Not Found.'
+						message: 'Not Found.'
 					});
 			} else {
 					if (req.user.id == event.owner) {
@@ -100,7 +100,7 @@ export default({ config, db }) => {
 				} else {
 					return res.status(401).json({
 						success: false,
-						error: 'Not Authorized.'
+						message: 'Not Authorized.'
 					});
 				}
 			}
@@ -139,7 +139,7 @@ export default({ config, db }) => {
 				} else {
 					return res.status(401).json({
 						success: false,
-						error: 'Not Authorized.'
+						message: 'Not Authorized.'
 					});
 				}
 			}
@@ -157,7 +157,7 @@ export default({ config, db }) => {
 			} else if (!event){
 					return res.status(404).json({
 						success: false,
-						error: 'Not Found.'
+						message: 'Not Found.'
 					});
 			} else {
 				let newAttend = new Attend();
