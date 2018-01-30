@@ -10,7 +10,7 @@ export default ({ config, db}) => {
 	let api = Router();
 
 	// '/v1/vivixx/add'
-	api.post('/add', authenticate, (req, res, next) => {
+	api.post('/add', (req, res, next) => {
 		let newStudent = new Vivixx();
 		newStudent.name = req.body.name;
 		newStudent.email = req.body.email;
