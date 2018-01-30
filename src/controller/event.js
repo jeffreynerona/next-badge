@@ -161,7 +161,6 @@ export default({ config, db }) => {
 					});
 			} else {
 				let newAttend = new Attend();
-
 				newAttend.user = req.user.id;
 				newAttend.event = event._id;
 				newAttend.save((err, event) => {
@@ -172,9 +171,24 @@ export default({ config, db }) => {
 						});
 					}
 					res.status(200).json({
+						success: true,
 						message: 'Attendee Saved!'
 					});
 				});
+			}
+		});
+	});
+
+	// '/v1/attendees/' - read
+	api.get('/test/test', (req,res) => {
+		Attend.find({}, (err, attend) => {
+			if (err) {
+				res.status(422).json({
+					success: false,
+					message: err.message
+				});
+			} else {
+				res.status(200).json(attend);
 			}
 		});
 	});

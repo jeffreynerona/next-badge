@@ -47,6 +47,7 @@ export default ({ config, db}) => {
 		res.logout();
 		res.status(200).send('Successfully logged out');
 	});
+	
 	api.get('/error', (req, res) => {
 		res.status(200).json({
 			success: false,

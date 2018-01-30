@@ -15,6 +15,7 @@ let generateAccessToken = (req, res, next) => {
 	req.token = req.token || {};
 	req.token = jwt.sign({
 		id: req.user.id,
+		fullname: req.user.fullname
 	}, SECRET, {
 		expiresIn: 604800
 	});

@@ -5,6 +5,7 @@ import initializeDb from '../db';
 import badge from '../controller/badge';
 import user from '../controller/user';
 import event from '../controller/event';
+import vivixx from '../controller/vivixx';
 
 let router = express();
 
@@ -18,6 +19,7 @@ initializeDb(db=> {
 	router.use('/badge', badge({ config, db }));
 	router.use('/user', user({ config, db }));
 	router.use('/event', event({ config, db }));
+	router.use('/vivixx', vivixx({ config, db }));
 
 });
 
