@@ -45,6 +45,37 @@ export default ({ config, db}) => {
 		});
 	});
 
+	// '/v1/vivixx/:id' - delete
+	api.delete("/:id", (req, res) => {
+		Vivixx.findById(req.params.id, (err, vivixx) => {
+			if (err) {
+				res.status(422).json({
+					success: false,
+					message: err.message
+				});
+			} else if (!vivixx){
+					return res.status(404).json({
+						success: false,
+						error: 'Not Found.'
+					});
+			} else {
+					vivixx.remove(err => {
+						if (err) {
+							res.status(422).json({
+								success: false,
+								message: err.message
+							});
+						} else {
+							res.status(200).json({
+								success: true,
+								message: "Student deleted"
+							});
+						}
+					});
+			}
+		});
+	});
+
 	// '/v1/vivixx/:id' - read 1
 	api.get('/:id', (req, res) => {
 		Vivixx.findById(req.params.id, (err, vivix) => {
