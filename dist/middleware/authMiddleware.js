@@ -17,10 +17,14 @@ var authenticate = (0, _expressJwt2.default)({ secret: SECRET });
 
 var generateAccessToken = function generateAccessToken(req, res, next) {
 	console.log(req.user.id);
-	req.user = req.user;
+	req.user.id = req.user.id;
+	req.user.coins = req.user.coins;
+	req.user.type = req.user.type;
+	req.user.fullname = req.user.fullname;
 	req.token = req.token || {};
 	req.token = _jsonwebtoken2.default.sign({
-		id: req.user.id
+		id: req.user.id,
+		fullname: req.user.fullname
 	}, SECRET, {
 		expiresIn: 604800
 	});
@@ -30,7 +34,12 @@ var generateAccessToken = function generateAccessToken(req, res, next) {
 var respond = function respond(req, res) {
 	res.status(200).json({
 		success: true,
-		user: req.user,
+		user: {
+			id: req.user.id,
+			coins: req.user.coins,
+			type: req.user.type,
+			fullname: req.user.fullname
+		},
 		token: req.token
 	});
 };

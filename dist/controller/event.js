@@ -93,7 +93,7 @@ exports.default = function (_ref) {
 			} else if (!event) {
 				return res.status(404).json({
 					success: false,
-					error: 'Not Found.'
+					message: 'Not Found.'
 				});
 			} else {
 				if (req.user.id == event.owner) {
@@ -120,7 +120,7 @@ exports.default = function (_ref) {
 				} else {
 					return res.status(401).json({
 						success: false,
-						error: 'Not Authorized.'
+						message: 'Not Authorized.'
 					});
 				}
 			}
@@ -159,7 +159,7 @@ exports.default = function (_ref) {
 				} else {
 					return res.status(401).json({
 						success: false,
-						error: 'Not Authorized.'
+						message: 'Not Authorized.'
 					});
 				}
 			}
@@ -177,11 +177,10 @@ exports.default = function (_ref) {
 			} else if (!event) {
 				return res.status(404).json({
 					success: false,
-					error: 'Not Found.'
+					message: 'Not Found.'
 				});
 			} else {
 				var newAttend = new _attend2.default();
-
 				newAttend.user = req.user.id;
 				newAttend.event = event._id;
 				newAttend.save(function (err, event) {
@@ -192,9 +191,24 @@ exports.default = function (_ref) {
 						});
 					}
 					res.status(200).json({
+						success: true,
 						message: 'Attendee Saved!'
 					});
 				});
+			}
+		});
+	});
+
+	// '/v1/attendees/' - read
+	api.get('/test/test', function (req, res) {
+		_attend2.default.find({}, function (err, attend) {
+			if (err) {
+				res.status(422).json({
+					success: false,
+					message: err.message
+				});
+			} else {
+				res.status(200).json(attend);
 			}
 		});
 	});

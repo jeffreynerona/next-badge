@@ -72,6 +72,7 @@ exports.default = function (_ref) {
 		res.logout();
 		res.status(200).send('Successfully logged out');
 	});
+
 	api.get('/error', function (req, res) {
 		res.status(200).json({
 			success: false,
