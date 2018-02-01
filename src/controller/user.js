@@ -62,7 +62,8 @@ export default ({ config, db}) => {
 		console.log("authenticated");
 		res.status(200).json({
 			success: true,
-			message: "Authenticated"
+			message: "Authenticated",
+			user: req.user.id
 		});
 	});
 
