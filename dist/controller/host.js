@@ -1,18 +1,40 @@
-import mongoose from 'mongoose';
-import { Router } from 'express';
-import Event from '../model/event';
-import Host from '../model/host';
-import md5 from 'md5';
+'use strict';
 
-import { authenticate } from '../middleware/authMiddleware';
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
 
-export default({ config, db }) => {
-	let api = Router();
+var _mongoose = require('mongoose');
 
+var _mongoose2 = _interopRequireDefault(_mongoose);
+
+var _express = require('express');
+
+var _event = require('../model/event');
+
+var _event2 = _interopRequireDefault(_event);
+
+var _host = require('../model/host');
+
+var _host2 = _interopRequireDefault(_host);
+
+var _md = require('md5');
+
+var _md2 = _interopRequireDefault(_md);
+
+var _authMiddleware = require('../middleware/authMiddleware');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = function (_ref) {
+	var config = _ref.config,
+	    db = _ref.db;
+
+	var api = (0, _express.Router)();
 
 	// for testing 'v1/host/test/:id'
-	api.get('/test/:id', authenticate, (req, res, next) => {
-		let host = req.user.id;
+	api.get('/test/:id', _authMiddleware.authenticate, function (req, res, next) {
+		var host = req.user.id;
 		// newEvent.name = req.body.name;
 		// newEvent.description = req.body.description;
 		// newEvent.category = req.body.category;
@@ -21,45 +43,43 @@ export default({ config, db }) => {
 		// newEvent.endtime = new Date(req.body.endtime);
 		// newEvent.image = req.body.image;
 		// newEvent.owner = req.user.id;
-		Event.findById(req.params.id, (err, event) => {
+		_event2.default.findById(req.params.id, function (err, event) {
 			if (err) {
 				res.status(422).json({
 					success: false,
 					message: err.message
 				});
 			} else {
-				if(event.owner == host) {
-					Host.find({
-						"event" : req.params.id,
-						"endtime" : { $exists: false }
-					}, (err, hosts) => {
+				if (event.owner == host) {
+					_host2.default.find({
+						"event": req.params.id,
+						"endtime": { $exists: false }
+					}, function (err, hosts) {
 						if (err) {
 							console.log('nothing found');
 							//no active host found, create one then connect the sockets
 							res.status(200).json({
 								success: true,
-								message: 'nothing found',
+								message: 'nothing found'
 							});
 						} else {
 							console.log('found something');
 							//found an active host
 							//generate qr shit and connect the sockiets(happens in client)
-							if(hosts.length>=1) {
+							if (hosts.length >= 1) {
 								res.status(200).json({
 									success: true,
-									hosts: hosts[hosts.length-1]
-									});
-							}
-							else {
+									hosts: hosts[hosts.length - 1]
+								});
+							} else {
 								res.status(200).json({
-								success: true,
-								message: 'nothing found',
-							});
+									success: true,
+									message: 'nothing found'
+								});
 							}
 						}
 					});
-				}
-				else {
+				} else {
 					return res.status(401).json({
 						success: false,
 						message: 'Not Authorized.'
@@ -70,8 +90,8 @@ export default({ config, db }) => {
 	});
 
 	// list of hosts - for testing /v1/host
-	api.get('/', (req,res) => {
-		Host.find({}, (err, hosts) => {
+	api.get('/', function (req, res) {
+		_host2.default.find({}, function (err, hosts) {
 			if (err) {
 				res.status(422).json({
 					success: false,
@@ -84,8 +104,8 @@ export default({ config, db }) => {
 	});
 
 	// 'v1/host/id'
-	api.get('/:id', authenticate, (req, res, next) => {
-		let host = req.user.id;
+	api.get('/:id', _authMiddleware.authenticate, function (req, res, next) {
+		var host = req.user.id;
 		// newEvent.name = req.body.name;
 		// newEvent.description = req.body.description;
 		// newEvent.category = req.body.category;
@@ -94,14 +114,14 @@ export default({ config, db }) => {
 		// newEvent.endtime = new Date(req.body.endtime);
 		// newEvent.image = req.body.image;
 		// newEvent.owner = req.user.id;
-		Event.findById(req.params.id, (err, event) => {
+		_event2.default.findById(req.params.id, function (err, event) {
 			if (err) {
 				res.status(422).json({
 					success: false,
 					message: err.message
 				});
 			} else {
-				if(event.owner == host) {
+				if (event.owner == host) {
 
 					// 1. host.find(eventid) where end is not set
 					// 2. if found, generate na ng qr and socket connect
@@ -110,15 +130,15 @@ export default({ config, db }) => {
 
 					var now = new Date();
 					var end = now;
-					var qr = md5(event.id.toString() + Date.now().toString());
+					var qr = (0, _md2.default)(event.id.toString() + Date.now().toString());
 					qr = qr.substr(qr.length - 5);
 					// end.setHours(end.getHours() + 12);
-					let newHost = new Host();
+					var newHost = new _host2.default();
 					newHost.event = event.id;
 					newHost.host = event.owner;
 					newHost.starttime = now.toISOString();
 					newHost.qr = qr;
-					newHost.save(err => {
+					newHost.save(function (err) {
 						if (err) {
 							res.status(422).json({
 								success: false,
@@ -132,8 +152,7 @@ export default({ config, db }) => {
 							});
 						}
 					});
-				}
-				else {
+				} else {
 					return res.status(401).json({
 						success: false,
 						message: 'Not Authorized.'
@@ -158,23 +177,23 @@ export default({ config, db }) => {
 	// });
 
 	// '/v1/event/add/:id attend
-	api.post('/add/:id', authenticate, (req,res) => {
-		Event.findById(req.params.id, (err, event) => {
+	api.post('/add/:id', _authMiddleware.authenticate, function (req, res) {
+		_event2.default.findById(req.params.id, function (err, event) {
 			if (err) {
 				res.status(422).json({
 					success: false,
 					message: err.message
 				});
-			} else if (!event){
-					return res.status(404).json({
-						success: false,
-						message: 'Not Found.'
-					});
+			} else if (!event) {
+				return res.status(404).json({
+					success: false,
+					message: 'Not Found.'
+				});
 			} else {
-				let newAttend = new Attend();
+				var newAttend = new Attend();
 				newAttend.user = req.user.id;
 				newAttend.event = event._id;
-				newAttend.save((err, event) => {
+				newAttend.save(function (err, event) {
 					if (err) {
 						res.status(422).json({
 							success: false,
@@ -191,4 +210,5 @@ export default({ config, db }) => {
 	});
 
 	return api;
-}
+};
+//# sourceMappingURL=host.js.map

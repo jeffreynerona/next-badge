@@ -35,6 +35,7 @@ var _routes2 = _interopRequireDefault(_routes);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var LocalStrategy = require('passport-local').Strategy;
+var io = require('socket.io')();
 
 var RateLimit = require('express-rate-limit');
 
@@ -140,6 +141,17 @@ _passport2.default.deserializeUser(function (id, done) {
 
 // api routes v1
 app.use('/v1', _routes2.default);
+
+//socket stuff
+io.on('connection', function (client) {
+  client.on('hostEvent', function (eventid, interval) {
+    console.log('Hosting ' + eventid + '. Interval: ' + interval);
+  });
+});
+
+var port = 8000;
+io.listen(port);
+console.log('Magic is happening at port:', port);
 
 app.server.listen(_config2.default.port);
 console.log('started the magic on port ' + app.server.address().port);

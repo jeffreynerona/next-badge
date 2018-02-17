@@ -17,6 +17,9 @@ var authenticate = (0, _expressJwt2.default)({ secret: SECRET });
 
 var generateAccessToken = function generateAccessToken(req, res, next) {
 	console.log(req.user.id);
+	if (req.params.id) {
+		req.params.id = req.params.id;
+	}
 	req.user.id = req.user.id;
 	req.user.coins = req.user.coins;
 	req.user.type = req.user.type;

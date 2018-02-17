@@ -20,8 +20,7 @@ let hostSchema = new Schema({
 		required: true
 	},
 	endtime: {
-		type: Date,
-		required: true
+		type: Date
 	},
 	qr: {
 		type: String

@@ -69,8 +69,11 @@ exports.default = function (_ref) {
 
 	// 'v1/user/logout'
 	api.get('/logout', _authMiddleware.authenticate, function (req, res) {
-		res.logout();
-		res.status(200).send('Successfully logged out');
+		req.logout();
+		res.status(200).json({
+			success: true,
+			message: "You are now logged out."
+		});
 	});
 
 	api.get('/error', function (req, res) {
@@ -84,7 +87,8 @@ exports.default = function (_ref) {
 		console.log("authenticated");
 		res.status(200).json({
 			success: true,
-			message: "Authenticated"
+			message: "Authenticated",
+			user: req.user.id
 		});
 	});
 

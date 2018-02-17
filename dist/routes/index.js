@@ -32,6 +32,10 @@ var _event = require('../controller/event');
 
 var _event2 = _interopRequireDefault(_event);
 
+var _host = require('../controller/host');
+
+var _host2 = _interopRequireDefault(_host);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var router = (0, _express2.default)();
@@ -46,6 +50,7 @@ var router = (0, _express2.default)();
 	router.use('/badge', (0, _badge2.default)({ config: _config2.default, db: db }));
 	router.use('/user', (0, _user2.default)({ config: _config2.default, db: db }));
 	router.use('/event', (0, _event2.default)({ config: _config2.default, db: db }));
+	router.use('/host', (0, _host2.default)({ config: _config2.default, db: db }));
 });
 
 exports.default = router;
