@@ -34,46 +34,46 @@ export default({ config, db }) => {
 						"endtime" : { $exists: false }
 					}, (err, hosts) => {
 						if (err) {
-							//no active host found, create one then connect the sockets
-							var now = new Date();
-							var end = now;
-							var qr = md5(event.id.toString() + Date.now().toString());
-							qr = qr.substr(qr.length - 5);
-							// end.setHours(end.getHours() + 12);
-							let newHost = new Host();
-							newHost.event = event.id;
-							newHost.host = event.owner;
-							newHost.starttime = now.toISOString();
-							newHost.qr = qr;
-							newHost.save(err => {
-								if (err) {
-									res.status(422).json({
-										success: false,
-										message: err.message
-									});
-								} else {
-									res.status(200).json({
-										success: true,
-										message: 'Hosting',
-										qr: newHost.qr
-									});
-								}
+							res.status(200).json({
+								success: false,
+								message: 'nothing found',
 							});
 						} else {
-							console.log('found something');
-							//found an active host
-							//generate qr shit and connect the sockiets(happens in client)
+							console.log('search host success');
 							if(hosts.length>=1) {
+								//found an active host
+								//generate qr shit and connect the sockiets(happens in client)
 								res.status(200).json({
 									success: true,
 									hosts: hosts[hosts.length-1]
 									});
 							}
 							else {
-								res.status(200).json({
-								success: true,
-								message: 'nothing found',
-							});
+								//no active host, create one
+								var now = new Date();
+								var end = now;
+								var qr = md5(event.id.toString() + Date.now().toString());
+								qr = qr.substr(qr.length - 5);
+								// end.setHours(end.getHours() + 12);
+								let newHost = new Host();
+								newHost.event = event.id;
+								newHost.host = event.owner;
+								newHost.starttime = now.toISOString();
+								newHost.qr = qr;
+								newHost.save(err => {
+									if (err) {
+										res.status(422).json({
+											success: false,
+											message: err.message
+										});
+									} else {
+										res.status(200).json({
+											success: true,
+											message: 'Hosting',
+											qr: newHost.qr
+										});
+									}
+								});
 							}
 						}
 					});
