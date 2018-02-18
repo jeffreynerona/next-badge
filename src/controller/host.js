@@ -34,11 +34,30 @@ export default({ config, db }) => {
 						"endtime" : { $exists: false }
 					}, (err, hosts) => {
 						if (err) {
-							console.log('nothing found');
 							//no active host found, create one then connect the sockets
-							res.status(200).json({
-								success: true,
-								message: 'nothing found',
+							var now = new Date();
+							var end = now;
+							var qr = md5(event.id.toString() + Date.now().toString());
+							qr = qr.substr(qr.length - 5);
+							// end.setHours(end.getHours() + 12);
+							let newHost = new Host();
+							newHost.event = event.id;
+							newHost.host = event.owner;
+							newHost.starttime = now.toISOString();
+							newHost.qr = qr;
+							newHost.save(err => {
+								if (err) {
+									res.status(422).json({
+										success: false,
+										message: err.message
+									});
+								} else {
+									res.status(200).json({
+										success: true,
+										message: 'Hosting',
+										qr: newHost.qr
+									});
+								}
 							});
 						} else {
 							console.log('found something');
