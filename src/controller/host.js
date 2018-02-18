@@ -43,16 +43,35 @@ export default({ config, db }) => {
 							if(hosts.length>=1) {
 								//found an active host
 								//generate qr shit and connect the sockiets(happens in client)
-								res.status(200).json({
-									success: true,
-									hosts: hosts[hosts.length-1]
-									});
+								var topudate = hosts[host.length-1];
+								var qrupdated = Date.now().toString();
+								var qr = md5(event.id.toString() + qrupdated);
+								qr = qr.substr(qr.length - 5);
+								topupdate.save(err => {
+									if (err) {
+										res.status(422).json({
+											success: false,
+											message: err.message
+										});
+									} else {
+										res.status(200).json({
+											success: true,
+											message: 'Host Restarted',
+											qr: qr
+										});
+									}
+								});
+								// res.status(200).json({
+								// 	success: true,
+								// 	hosts: hosts[hosts.length-1]
+								// 	});
 							}
 							else {
 								//no active host, create one
 								var now = new Date();
 								var end = now;
-								var qr = md5(event.id.toString() + Date.now().toString());
+								var qrupdated = Date.now().toString();
+								var qr = md5(event.id.toString() + qrupdated);
 								qr = qr.substr(qr.length - 5);
 								// end.setHours(end.getHours() + 12);
 								let newHost = new Host();

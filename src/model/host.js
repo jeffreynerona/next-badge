@@ -24,6 +24,9 @@ let hostSchema = new Schema({
 	},
 	qr: {
 		type: String
+	},
+	qrupdated: {
+		type: String
 	}
 },{timestamps: true});
 
