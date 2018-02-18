@@ -43,11 +43,11 @@ export default({ config, db }) => {
 							if(hosts.length>=1) {
 								//found an active host
 								//generate qr shit and connect the sockiets(happens in client)
-								var topudate = hosts[host.length-1];
+								var toupdate = hosts[hosts.length-1];
 								var qrupdated = Date.now().toString();
 								var qr = md5(event.id.toString() + qrupdated);
 								qr = qr.substr(qr.length - 5);
-								topupdate.save(err => {
+								toupdate.save(err => {
 									if (err) {
 										res.status(422).json({
 											success: false,
@@ -56,7 +56,7 @@ export default({ config, db }) => {
 									} else {
 										res.status(200).json({
 											success: true,
-											message: 'Host Restarted',
+											message: 'Regenerated QR',
 											qr: qr
 										});
 									}
