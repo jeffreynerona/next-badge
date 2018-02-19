@@ -141,7 +141,7 @@ io.on('connection', (client) => {
           //generate qr shit and connect the sockiets(happens in client)
           var toupdate = hosts[hosts.length-1];
           var qrupdated = Date.now().toString();
-          var qr = md5(event.id.toString() + qrupdated);
+          var qr = md5(event.eventid.toString() + qrupdated);
           qr = qr.substr(qr.length - 5);
           toupdate.save(err => {
             if (err) {
@@ -164,11 +164,11 @@ io.on('connection', (client) => {
           var now = new Date();
           var end = now;
           var qrupdated = Date.now().toString();
-          var qr = md5(event.id.toString() + qrupdated);
+          var qr = md5(event.eventid.toString() + qrupdated);
           qr = qr.substr(qr.length - 5);
           // end.setHours(end.getHours() + 12);
           let newHost = new Host();
-          newHost.event = event.id;
+          newHost.event = event.eventid;
           newHost.host = event.owner;
           newHost.starttime = now.toISOString();
           newHost.qr = qr;
