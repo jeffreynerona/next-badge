@@ -144,8 +144,18 @@ app.use('/v1', _routes2.default);
 
 //socket stuff
 io.on('connection', function (client) {
-  client.on('hostEvent', function (eventid, interval) {
-    console.log('Hosting ' + eventid + '. Interval: ' + interval);
+  var qrgenerator;
+  client.on('hostEvent', function (event) {
+    console.log(client.id + '-Hosting ' + event.eventid + '. Interval: ' + event.interval + ' seconds');
+    var x = 0;
+    qrgenerator = setInterval(function () {
+      x += 1;
+      client.emit('qrcode', x);
+    }, event.interval);
+  });
+  client.on('disconnect', function () {
+    console.log(client.id + ' has disconnected');
+    clearInterval(qrgenerator);
   });
 });
 

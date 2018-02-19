@@ -51,34 +51,75 @@ exports.default = function (_ref) {
 				});
 			} else {
 				if (event.owner == host) {
+					// host part
 					_host2.default.find({
 						"event": req.params.id,
 						"endtime": { $exists: false }
 					}, function (err, hosts) {
 						if (err) {
-							console.log('nothing found');
-							//no active host found, create one then connect the sockets
 							res.status(200).json({
-								success: true,
+								success: false,
 								message: 'nothing found'
 							});
 						} else {
-							console.log('found something');
-							//found an active host
-							//generate qr shit and connect the sockiets(happens in client)
+							console.log('search host success');
 							if (hosts.length >= 1) {
-								res.status(200).json({
-									success: true,
-									hosts: hosts[hosts.length - 1]
+								//found an active host
+								//generate qr shit and connect the sockiets(happens in client)
+								var toupdate = hosts[hosts.length - 1];
+								var qrupdated = Date.now().toString();
+								var qr = (0, _md2.default)(event.id.toString() + qrupdated);
+								qr = qr.substr(qr.length - 5);
+								toupdate.save(function (err) {
+									if (err) {
+										res.status(422).json({
+											success: false,
+											message: err.message
+										});
+									} else {
+										res.status(200).json({
+											success: true,
+											message: 'Regenerated QR',
+											qr: qr
+										});
+									}
 								});
+								// res.status(200).json({
+								// 	success: true,
+								// 	hosts: hosts[hosts.length-1]
+								// 	});
 							} else {
-								res.status(200).json({
-									success: true,
-									message: 'nothing found'
+								//no active host, create one
+								var now = new Date();
+								var end = now;
+								var qrupdated = Date.now().toString();
+								var qr = (0, _md2.default)(event.id.toString() + qrupdated);
+								qr = qr.substr(qr.length - 5);
+								// end.setHours(end.getHours() + 12);
+								var newHost = new _host2.default();
+								newHost.event = event.id;
+								newHost.host = event.owner;
+								newHost.starttime = now.toISOString();
+								newHost.qr = qr;
+								newHost.save(function (err) {
+									if (err) {
+										res.status(422).json({
+											success: false,
+											message: err.message
+										});
+									} else {
+										res.status(200).json({
+											success: true,
+											message: 'Hosting',
+											qr: newHost.qr
+										});
+									}
 								});
 							}
 						}
 					});
+
+					//end host
 				} else {
 					return res.status(401).json({
 						success: false,

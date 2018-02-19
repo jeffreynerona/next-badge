@@ -29,73 +29,12 @@ export default({ config, db }) => {
 				});
 			} else {
 				if(event.owner == host) {
-					Host.find({
-						"event" : req.params.id,
-						"endtime" : { $exists: false }
-					}, (err, hosts) => {
-						if (err) {
-							res.status(200).json({
-								success: false,
-								message: 'nothing found',
-							});
-						} else {
-							console.log('search host success');
-							if(hosts.length>=1) {
-								//found an active host
-								//generate qr shit and connect the sockiets(happens in client)
-								var toupdate = hosts[hosts.length-1];
-								var qrupdated = Date.now().toString();
-								var qr = md5(event.id.toString() + qrupdated);
-								qr = qr.substr(qr.length - 5);
-								toupdate.save(err => {
-									if (err) {
-										res.status(422).json({
-											success: false,
-											message: err.message
-										});
-									} else {
-										res.status(200).json({
-											success: true,
-											message: 'Regenerated QR',
-											qr: qr
-										});
-									}
-								});
-								// res.status(200).json({
-								// 	success: true,
-								// 	hosts: hosts[hosts.length-1]
-								// 	});
-							}
-							else {
-								//no active host, create one
-								var now = new Date();
-								var end = now;
-								var qrupdated = Date.now().toString();
-								var qr = md5(event.id.toString() + qrupdated);
-								qr = qr.substr(qr.length - 5);
-								// end.setHours(end.getHours() + 12);
-								let newHost = new Host();
-								newHost.event = event.id;
-								newHost.host = event.owner;
-								newHost.starttime = now.toISOString();
-								newHost.qr = qr;
-								newHost.save(err => {
-									if (err) {
-										res.status(422).json({
-											success: false,
-											message: err.message
-										});
-									} else {
-										res.status(200).json({
-											success: true,
-											message: 'Hosting',
-											qr: newHost.qr
-										});
-									}
-								});
-							}
-						}
+					// host part
+					res.status(200).json({
+						success: true,
+						message: 'Host Authenticated'
 					});
+					//end host
 				}
 				else {
 					return res.status(401).json({
