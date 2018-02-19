@@ -4,7 +4,6 @@ import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
 import passport from 'passport';
 const LocalStrategy = require('passport-local').Strategy;
-const io = require('socket.io')();
 
 import config from './config';
 import routes from './routes';
@@ -117,6 +116,7 @@ passport.deserializeUser(function(id, done) {
 app.use('/v1', routes);
 
 //socket stuff
+const io = require('socket.io')(app.server);
 io.on('connection', (client) => {
   var qrgenerator;
   client.on('hostEvent', (event) => {
@@ -132,10 +132,6 @@ io.on('connection', (client) => {
       clearInterval(qrgenerator);
   });
 });
-
-const port = 8000;
-io.listen(port);
-console.log('Magic is happening at port:', port);
 
 app.server.listen(config.port);
 console.log(`started the magic on port ${app.server.address().port}`);
