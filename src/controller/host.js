@@ -48,7 +48,6 @@ export default({ config, db }) => {
 		});
 	});
 
-	});
 
 	// '/v1/event/add/:id attend
 	api.post('/add/:id', authenticate, (req,res) => {
