@@ -20,7 +20,7 @@ let generateAccessToken = (req, res, next) => {
 		id: req.user.id,
 		fullname: req.user.fullname
 	}, SECRET, {
-		expiresIn: 604800
+		
 	});
 	next();
 }
