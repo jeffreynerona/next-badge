@@ -105,16 +105,22 @@ passport.use('local-register', new LocalStrategy({
 ));
 
 passport.serializeUser(function(user, done) {
-        done(null, user.id);
-    });
+    done(null, user.id);
+});
 passport.deserializeUser(function(id, done) {
-        User.findById(id, function(err, user) {
-            done(err, user);
-        });
+    User.findById(id, function(err, user) {
+        done(err, user);
     });
+});
 
 // api routes v1
 app.use('/v1', routes);
+
+//
+app.use('/.well-known/acme-challenge/*', (req, res) => {
+  var path = req.params[0] ? req.params[0] : 'index.html';
+  res.sendfile(path, {root: './.well-known/acme-challenge/'});
+});
 
 //socket stuff
 
